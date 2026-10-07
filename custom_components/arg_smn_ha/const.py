@@ -25,6 +25,7 @@ DOMAIN: Final = "arg_smn_ha"
 CONF_CONNECTION_TYPE: Final = "connection_type"
 CONF_OPENSMN_URL: Final = "opensmn_url"
 CONF_OPENSMN_PASSWORD: Final = "opensmn_password"
+CONF_SMN_TOKEN: Final = "smn_token"
 
 CONNECTION_TYPE_OPENSMN: Final = "opensmn"
 CONNECTION_TYPE_DIRECT: Final = "direct"

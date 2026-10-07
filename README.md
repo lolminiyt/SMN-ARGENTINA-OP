@@ -52,6 +52,17 @@ Ajustes → Dispositivos y servicios → Agregar integración → **SMN Argentin
 
 **Paso 2 (solo proxy):** URL base (ej. `http://192.168.1.10:6942/smn`) y contraseña (**exactamente igual** al `PASSWORD` de tu `.env` de OpenSMN; vacía si no tiene).
 
+### Si el modo directo falla: pegá tu token manual
+
+El SMN a veces bloquea la obtención automática del token. Si ves "No se pudo conectar directo al SMN", conseguí tu token en 1 minuto:
+
+1. Abrí https://www.smn.gob.ar/ en tu navegador (Chrome/Edge/Firefox).
+2. Apretá **F12** → pestaña **Aplicación** (o *Application*) → **Almacenamiento local** → `https://www.smn.gob.ar`.
+3. Copiá el valor de **`token`** (empieza con `eyJ`, es un texto largo).
+4. Volvé al instalador, elegí **SMN directo** y pegalo en **Token del SMN**.
+
+El token dura varios días; si algún día la integración pide reautenticar, repetí estos pasos y actualizalo en **Opciones**.
+
 | Campo | Modo proxy | Modo directo |
 |---|---|---|
 | Tipo de conexión | `Proxy OpenSMN` | `SMN directo` (por defecto) |

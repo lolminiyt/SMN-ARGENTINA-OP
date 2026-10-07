@@ -19,6 +19,7 @@ from .const import (
     CONF_OPENSMN_PASSWORD,
     CONF_OPENSMN_URL,
     CONF_SCAN_INTERVAL,
+    CONF_SMN_TOKEN,
     DEFAULT_CONNECTION_TYPE,
     DEFAULT_SCAN_INTERVAL_SECONDS,
     DOMAIN,
@@ -143,6 +144,7 @@ class SmnDataUpdateCoordinator(DataUpdateCoordinator[SmnData]):
             session,
             options.get(CONF_OPENSMN_URL, data.get(CONF_OPENSMN_URL, "")),
             options.get(CONF_OPENSMN_PASSWORD, data.get(CONF_OPENSMN_PASSWORD, "")),
+            options.get(CONF_SMN_TOKEN, data.get(CONF_SMN_TOKEN, "")),
         )
         location_id = str(data.get("location_id", ""))
         self.data = SmnData(location_id=location_id)

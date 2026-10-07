@@ -269,6 +269,32 @@ class TestDirectBackend(unittest.IsolatedAsyncioTestCase):
         jwt_calls = [h for h in auth_calls if h.startswith("JWT eyJ")]
         self.assertTrue(jwt_calls, "direct mode must send JWT header")
 
+    async def test_static_token_skips_scrape(self):
+        session = FakeSession(proxy_routes(), token_html=None)
+        static = "eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjk5OTk5OTk5OTl9.c2ln"
+        client = create_client(CONNECTION_TYPE_DIRECT, session, smn_token=static)
+        data = await client.get("/v1/weather/location/4864")
+        self.assertEqual(data["temperature"], 22.5)
+        jwt_calls = [h.get("Authorization", "") for _, h in session.calls if "/v1/weather" in _]
+        self.assertTrue(all(h == f"JWT {static}" for h in jwt_calls))
+        # ws2/www token pages never touched
+        self.assertFalse(any("ws2.smn.gob.ar" in u or "www.smn.gob.ar" in u for u, _ in session.calls))
+
+    async def test_token_failure_is_token_error(self):
+        from custom_components.arg_smn_ha.api import SmnTokenError
+        session = FakeSession(proxy_routes(), token_html="<html>no token</html>")
+        client = DirectSmnClient(session)
+        with self.assertRaises(SmnTokenError):
+            await client.get("/v1/weather/location/4864")
+
+    def test_is_plausible_jwt(self):
+        from custom_components.arg_smn_ha.api import is_plausible_jwt
+        self.assertTrue(is_plausible_jwt("eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjk5OTk5OTk5OTl9.c2ln"))
+        self.assertFalse(is_plausible_jwt(""))
+        self.assertFalse(is_plausible_jwt("notoken"))
+        self.assertFalse(is_plausible_jwt("a.b"))
+        self.assertFalse(is_plausible_jwt("xxx.yyy.zzz"))
+
     async def test_token_pages_exhausted_gives_clear_error(self):
         session = FakeSession(proxy_routes(), token_html="<html>no token</html>")
         client = DirectSmnClient(session)

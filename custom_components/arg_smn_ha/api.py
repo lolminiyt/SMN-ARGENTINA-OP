@@ -62,6 +62,10 @@ class SmnNotFoundError(SmnApiError):
     """Location or resource not found (usually coordinates outside Argentina)."""
 
 
+class SmnTokenError(SmnApiError):
+    """SMN token could not be obtained (scraping blocked or page unreachable)."""
+
+
 def normalize_base_url(url: str) -> str:
     """Normalize a user-supplied base URL (strip whitespace/trailing slash)."""
     return url.strip().rstrip("/")
@@ -85,6 +89,12 @@ def extract_token_from_html(html: str) -> str | None:
         if match:
             return match.group(1)
     return None
+
+
+def is_plausible_jwt(token: str) -> bool:
+    """Cheap client-side check: 3 dot-separated parts starting with ``eyJ``."""
+    parts = (token or "").strip().split(".")
+    return len(parts) == 3 and parts[0].startswith("eyJ") and all(parts)
 
 
 def decode_jwt_expiry(token: str) -> datetime | None:
@@ -199,12 +209,21 @@ class OpenSmnClient(BaseSmnClient):
 
 
 class DirectSmnTokenManager:
-    """Fetch and cache the SMN JWT by scraping the SMN website."""
+    """Fetch and cache the SMN JWT by scraping the SMN website.
 
-    def __init__(self, session: aiohttp.ClientSession) -> None:
+    A user-supplied static token (pasted from the browser) always wins:
+    Cloudflare intermittently blocks scraping, so manual paste is the
+    reliable fallback.
+    """
+
+    def __init__(self, session: aiohttp.ClientSession, static_token: str = "") -> None:
         self._session = session
+        self._static_token = (static_token or "").strip() or None
         self._token: str | None = None
         self._expires: datetime | None = None
+        if self._static_token:
+            self._token = self._static_token
+            self._expires = decode_jwt_expiry(self._static_token)
 
     async def _fetch_from_page(self, page_url: str) -> str | None:
         async with async_timeout.timeout(REQUEST_TIMEOUT_SECONDS):
@@ -218,6 +237,9 @@ class DirectSmnTokenManager:
 
     async def fetch_token(self) -> str:
         """Fetch a fresh token, trying each known SMN page in order."""
+        if self._static_token:
+            self._token = self._static_token
+            return self._static_token
         last_error: Exception | None = None
         for page_url in SMN_TOKEN_PAGES:
             try:
@@ -228,14 +250,16 @@ class DirectSmnTokenManager:
                     if self._expires:
                         _LOGGER.info("SMN token expires at %s", self._expires.isoformat())
                     return token
-                last_error = SmnApiError(f"No token found in {page_url}")
+                last_error = SmnTokenError(f"No token found in {page_url}")
             except (aiohttp.ClientError, TimeoutError) as err:
                 last_error = err
                 _LOGGER.debug("Token fetch failed for %s: %s", page_url, err)
-        raise SmnApiError(f"Could not obtain SMN token: {last_error}")
+        raise SmnTokenError(f"Could not obtain SMN token (paste it manually): {last_error}")
 
     async def get_token(self) -> str:
         """Return a cached token, refreshing when close to expiry."""
+        if self._static_token:
+            return self._static_token
         if self._token and self._expires:
             if dt_util.utcnow() < (self._expires - timedelta(minutes=5)):
                 return self._token
@@ -251,9 +275,10 @@ class DirectSmnClient(BaseSmnClient):
         self,
         session: aiohttp.ClientSession,
         token_manager: DirectSmnTokenManager | None = None,
+        static_token: str = "",
     ) -> None:
         super().__init__(session)
-        self._tokens = token_manager or DirectSmnTokenManager(session)
+        self._tokens = token_manager or DirectSmnTokenManager(session, static_token)
 
     async def _headers(self) -> dict[str, str]:
         headers = await super()._headers()
@@ -278,10 +303,11 @@ def create_client(
     session: aiohttp.ClientSession,
     opensmn_url: str = "",
     opensmn_password: str = "",
+    smn_token: str = "",
 ) -> SmnClient:
     """Factory used by config flow, coordinator and services."""
     if connection_type == CONNECTION_TYPE_DIRECT:
-        return DirectSmnClient(session)
+        return DirectSmnClient(session, static_token=smn_token)
     if connection_type == CONNECTION_TYPE_OPENSMN:
         if not (opensmn_url or "").strip():
             raise SmnApiError("OpenSMN URL is required in proxy mode.")

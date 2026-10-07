@@ -19,12 +19,20 @@
           "opensmn_password": "OpenSMN password"
         }
       },
+      "direct": {
+        "title": "Connect directly to SMN",
+        "description": "Leave the token empty to fetch it automatically. If automatic fetch fails (SMN sometimes blocks it), paste your token: open https://www.smn.gob.ar/ in your browser, press F12, go to Application > Local Storage > https://www.smn.gob.ar and copy the value of 'token'.",
+        "data": {
+          "smn_token": "SMN token (optional)"
+        }
+      },
       "reauth_confirm": {
         "title": "Re-authenticate SMN Argentina",
         "description": "Update the OpenSMN password (must match PASSWORD in the OpenSMN .env file).",
         "data": {
           "opensmn_url": "OpenSMN base URL",
-          "opensmn_password": "OpenSMN password (leave empty if OpenSMN has none)"
+          "opensmn_password": "OpenSMN password (leave empty if OpenSMN has none)",
+          "smn_token": "SMN token (direct mode)"
         }
       }
     },
@@ -33,6 +41,7 @@
       "cannot_connect_proxy": "Could not reach the OpenSMN proxy. Is OpenSMN running at that URL? If Home Assistant runs on another machine, use the LAN IP instead of localhost.",
       "cannot_connect_direct": "Could not reach SMN directly. Check your internet connection and try again.",
       "invalid_auth": "Authentication failed. Check the OpenSMN password and try again.",
+      "invalid_token": "That doesn't look like an SMN token. It should start with 'eyJ' and have 3 parts separated by dots.",
       "location_not_found": "No SMN station found for these coordinates. Try a nearby city.",
       "invalid_coordinates": "Invalid latitude/longitude.",
       "invalid_name": "Enter a location name.",
@@ -52,7 +61,8 @@
         "data": {
           "scan_interval": "Update interval (seconds)",
           "opensmn_url": "OpenSMN base URL",
-          "opensmn_password": "OpenSMN password"
+          "opensmn_password": "OpenSMN password",
+          "smn_token": "SMN token"
         }
       }
     },

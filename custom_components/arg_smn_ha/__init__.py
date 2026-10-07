@@ -21,6 +21,7 @@ from .const import (
     CONF_CONNECTION_TYPE,
     CONF_OPENSMN_PASSWORD,
     CONF_OPENSMN_URL,
+    CONF_SMN_TOKEN,
     DEFAULT_CONNECTION_TYPE,
     DOMAIN,
     SERVICE_GET_ALERTS,
@@ -135,6 +136,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                     session,
                     entry_options.get(CONF_OPENSMN_URL, entry_data.get(CONF_OPENSMN_URL, "")),
                     entry_options.get(CONF_OPENSMN_PASSWORD, entry_data.get(CONF_OPENSMN_PASSWORD, "")),
+                    entry_options.get(CONF_SMN_TOKEN, entry_data.get(CONF_SMN_TOKEN, "")),
                 )
                 from .const import PATH_ALERT
 

@@ -19,12 +19,20 @@
           "opensmn_password": "Contraseña de OpenSMN"
         }
       },
+      "direct": {
+        "title": "Conectar directo al SMN",
+        "description": "Dejá el token vacío para obtenerlo automáticamente. Si falla (el SMN a veces lo bloquea), pegá tu token: abrí https://www.smn.gob.ar/ en tu navegador, apretá F12, andá a Aplicación > Almacenamiento local > https://www.smn.gob.ar y copiá el valor de 'token'.",
+        "data": {
+          "smn_token": "Token del SMN (opcional)"
+        }
+      },
       "reauth_confirm": {
         "title": "Reautenticar SMN Argentina",
         "description": "Actualizá la contraseña de OpenSMN (igual al PASSWORD del .env de OpenSMN).",
         "data": {
           "opensmn_url": "URL base de OpenSMN",
-          "opensmn_password": "Contraseña de OpenSMN (vacía si OpenSMN no tiene)"
+          "opensmn_password": "Contraseña de OpenSMN (vacía si OpenSMN no tiene)",
+          "smn_token": "Token del SMN (modo directo)"
         }
       }
     },
@@ -33,6 +41,7 @@
       "cannot_connect_proxy": "No se pudo conectar al proxy OpenSMN. ¿Está levantado en esa URL? Si Home Assistant corre en otra máquina, usá la IP de tu red en vez de localhost.",
       "cannot_connect_direct": "No se pudo conectar directo al SMN. Verificá tu conexión a internet e intentá de nuevo.",
       "invalid_auth": "Autenticación fallida. Verificá la contraseña de OpenSMN.",
+      "invalid_token": "Eso no parece un token del SMN. Tiene que empezar con 'eyJ' y tener 3 partes separadas por puntos.",
       "location_not_found": "No hay estación SMN para esas coordenadas. Probá una ciudad cercana.",
       "invalid_coordinates": "Latitud/longitud inválidas.",
       "invalid_name": "Ingresá un nombre de ubicación.",
@@ -52,7 +61,8 @@
         "data": {
           "scan_interval": "Intervalo de actualización (segundos)",
           "opensmn_url": "URL base de OpenSMN",
-          "opensmn_password": "Contraseña de OpenSMN"
+          "opensmn_password": "Contraseña de OpenSMN",
+          "smn_token": "Token del SMN"
         }
       }
     },
