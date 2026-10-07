@@ -27,6 +27,10 @@ from custom_components.arg_smn_ha import binary_sensor as bs_mod
 from custom_components.arg_smn_ha import coordinator as coord_mod
 from custom_components.arg_smn_ha import diagnostics as diag_mod
 from custom_components.arg_smn_ha import weather as wx_mod
+from custom_components.arg_smn_ha import api as api_mod
+
+# No real waiting in unit tests; retry *logic* is what we verify.
+api_mod.TOKEN_SCRAPE_BACKOFF_SECONDS = 0
 from custom_components.arg_smn_ha.api import (
     DirectSmnClient,
     OpenSmnClient,
@@ -301,6 +305,34 @@ class TestDirectBackend(unittest.IsolatedAsyncioTestCase):
         with self.assertRaises(SmnApiError) as ctx:
             await client.get("/v1/weather/location/4864")
         self.assertIn("token", str(ctx.exception).lower())
+
+    async def test_scrape_retries_through_cloudflare_blocks(self):
+        import aiohttp
+
+        html = "<script>localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiJ9.e30.x')</script>"
+
+        class FlakySession(FakeSession):
+            def __init__(self, *args, **kwargs):
+                super().__init__(*args, **kwargs)
+                self.token_failures_left = 3
+
+            def get(self, url, headers=None):
+                if ("ws2.smn.gob.ar" in url or "www.smn.gob.ar" in url) and self.token_failures_left > 0:
+                    self.token_failures_left -= 1
+                    return FakeGet(exc=aiohttp.ClientError("403 blocked"))
+                return super().get(url, headers=headers)
+
+        session = FlakySession(proxy_routes(), token_html=html)
+        client = DirectSmnClient(session)
+        data = await client.get("/v1/weather/location/4864")
+        self.assertEqual(data["temperature"], 22.5)
+
+    def test_browser_headers_and_refresh_margin(self):
+        from custom_components.arg_smn_ha.api import BROWSER_HEADERS, TOKEN_REFRESH_MARGIN
+        from datetime import timedelta
+        self.assertIn("Sec-Fetch-Mode", BROWSER_HEADERS)
+        self.assertIn("es-AR", BROWSER_HEADERS["Accept-Language"])
+        self.assertEqual(TOKEN_REFRESH_MARGIN, timedelta(minutes=10))
 
 
 class TestServicesAndAutomations(unittest.IsolatedAsyncioTestCase):

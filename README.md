@@ -61,7 +61,14 @@ El SMN a veces bloquea la obtención automática del token. Si ves "No se pudo c
 3. Copiá el valor de **`token`** (empieza con `eyJ`, es un texto largo).
 4. Volvé al instalador, elegí **SMN directo** y pegalo en **Token del SMN**.
 
-El token dura varios días; si algún día la integración pide reautenticar, repetí estos pasos y actualizalo en **Opciones**.
+Ojo: el token manual también vence en 1 hora; sirve para salir del paso, pero lo ideal es dejar el campo vacío y que la integración lo renueve sola (ver abajo). Si vence, la integración te avisa para reautenticar.
+
+### El token dura 1 hora: ¿cómo se refresca solo?
+
+El JWT del SMN expira cada hora (verificado). La integración lo renueva sola: 10 minutos antes de vencer obtiene uno nuevo, y si un pedido da 401 reintenta con token fresco. Como el SMN a veces bloquea el scrapeo (Cloudflare intermitente), cada renovación reintenta hasta 5 veces con pausas entre intentos.
+
+- **Meter el proxy DENTRO del plugin no se puede**: el proxy usa Selenium + Chrome para esquivar Cloudflare, y en Home Assistant (HAOS/Docker) no hay navegador ni forma de instalar uno. Por eso el proxy es un servidor aparte.
+- Si el modo directo tiene baches en tus horarios, el proxy auto-hospedado es el camino fiable: él se encarga del token y cachea.
 
 | Campo | Modo proxy | Modo directo |
 |---|---|---|

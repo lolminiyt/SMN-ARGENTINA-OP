@@ -11,6 +11,7 @@ authentication mechanism differ:
 
 from __future__ import annotations
 
+import asyncio
 import base64
 import json
 import logging
@@ -40,6 +41,35 @@ from .const import (
 )
 
 _LOGGER = logging.getLogger(__name__)
+
+# Full browser header set: Cloudflare challenges bare-bones clients far more
+# often. This does not bypass a real challenge, but measurably raises the
+# plain-HTTP success rate (verified live against www.smn.gob.ar).
+BROWSER_HEADERS: dict[str, str] = {
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/131.0.0.0 Safari/537.36"
+    ),
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+    "Accept-Language": "es-AR,es;q=0.9,en;q=0.8",
+    "Upgrade-Insecure-Requests": "1",
+    "Sec-Fetch-Dest": "document",
+    "Sec-Fetch-Mode": "navigate",
+    "Sec-Fetch-Site": "none",
+}
+
+API_HEADERS: dict[str, str] = {
+    "Accept": "application/json",
+    "User-Agent": BROWSER_HEADERS["User-Agent"],
+    "Accept-Language": BROWSER_HEADERS["Accept-Language"],
+}
+
+# SMN JWTs live exactly 1 hour (verified from iat/exp claims), so the token
+# must be re-scraped roughly hourly. Refresh a bit early to avoid 401s.
+TOKEN_REFRESH_MARGIN = timedelta(minutes=10)
+TOKEN_SCRAPE_ATTEMPTS = 5
+TOKEN_SCRAPE_BACKOFF_SECONDS = 2.0
 
 _TOKEN_PATTERNS: tuple[str, ...] = (
     r"localStorage\.setItem\(\s*['\"]token['\"]\s*,\s*['\"]([^'\"]+)['\"]",
@@ -146,7 +176,7 @@ class BaseSmnClient:
         self._session = session
 
     async def _headers(self) -> dict[str, str]:
-        return {"Accept": "application/json"}
+        return dict(API_HEADERS)
 
     async def _get_json(self, url: str, headers: dict[str, str]) -> Any:
         try:
@@ -226,8 +256,9 @@ class DirectSmnTokenManager:
             self._expires = decode_jwt_expiry(self._static_token)
 
     async def _fetch_from_page(self, page_url: str) -> str | None:
+        headers = dict(BROWSER_HEADERS)
         async with async_timeout.timeout(REQUEST_TIMEOUT_SECONDS):
-            async with self._session.get(page_url) as resp:
+            async with self._session.get(page_url, headers=headers) as resp:
                 resp.raise_for_status()
                 html = await resp.text()
         token = extract_token_from_html(html)
@@ -236,32 +267,39 @@ class DirectSmnTokenManager:
         return token
 
     async def fetch_token(self) -> str:
-        """Fetch a fresh token, trying each known SMN page in order."""
+        """Fetch a fresh token, retrying across pages with backoff.
+
+        Cloudflare intermittently blocks plain-HTTP scrapes, so a single
+        pass over the token pages is not enough for hourly refreshes.
+        """
         if self._static_token:
             self._token = self._static_token
             return self._static_token
         last_error: Exception | None = None
-        for page_url in SMN_TOKEN_PAGES:
-            try:
-                token = await self._fetch_from_page(page_url)
-                if token:
-                    self._token = token
-                    self._expires = decode_jwt_expiry(token)
-                    if self._expires:
-                        _LOGGER.info("SMN token expires at %s", self._expires.isoformat())
-                    return token
-                last_error = SmnTokenError(f"No token found in {page_url}")
-            except (aiohttp.ClientError, TimeoutError) as err:
-                last_error = err
-                _LOGGER.debug("Token fetch failed for %s: %s", page_url, err)
-        raise SmnTokenError(f"Could not obtain SMN token (paste it manually): {last_error}")
+        for attempt in range(1, TOKEN_SCRAPE_ATTEMPTS + 1):
+            for page_url in SMN_TOKEN_PAGES:
+                try:
+                    token = await self._fetch_from_page(page_url)
+                    if token:
+                        self._token = token
+                        self._expires = decode_jwt_expiry(token)
+                        if self._expires:
+                            _LOGGER.info("SMN token expires at %s", self._expires.isoformat())
+                        return token
+                    last_error = SmnTokenError(f"No token found in {page_url}")
+                except (aiohttp.ClientError, TimeoutError) as err:
+                    last_error = err
+                    _LOGGER.debug("Token fetch failed for %s: %s", page_url, err)
+            if attempt < TOKEN_SCRAPE_ATTEMPTS:
+                await asyncio.sleep(TOKEN_SCRAPE_BACKOFF_SECONDS * attempt)
+        raise SmnTokenError(f"Could not obtain SMN token after retries (paste it manually): {last_error}")
 
     async def get_token(self) -> str:
-        """Return a cached token, refreshing when close to expiry."""
+        """Return a cached token, refreshing ahead of the hourly expiry."""
         if self._static_token:
             return self._static_token
         if self._token and self._expires:
-            if dt_util.utcnow() < (self._expires - timedelta(minutes=5)):
+            if dt_util.utcnow() < (self._expires - TOKEN_REFRESH_MARGIN):
                 return self._token
         elif self._token and self._expires is None:
             return self._token
