@@ -3,11 +3,11 @@
     "step": {
       "user": {
         "title": "Configure SMN Argentina",
-        "description": "Connect via your self-hosted OpenSMN proxy (recommended, private) or directly to SMN.",
+        "description": "Connect via your self-hosted OpenSMN proxy (recommended, private) or directly to SMN. If you don't run an OpenSMN server, pick Direct SMN: no URL or password needed.",
         "data": {
           "connection_type": "Connection type",
-          "opensmn_url": "OpenSMN base URL (proxy mode)",
-          "opensmn_password": "OpenSMN password (if set in .env)",
+          "opensmn_url": "OpenSMN base URL (proxy mode only)",
+          "opensmn_password": "OpenSMN password (must match PASSWORD in the OpenSMN .env file; leave empty if it has none)",
           "latitude": "Latitude",
           "longitude": "Longitude",
           "name": "Location name"
@@ -15,10 +15,10 @@
       },
       "reauth_confirm": {
         "title": "Re-authenticate SMN Argentina",
-        "description": "Update the OpenSMN password (or refresh the direct SMN token).",
+        "description": "Update the OpenSMN password (must match PASSWORD in the OpenSMN .env file).",
         "data": {
           "opensmn_url": "OpenSMN base URL",
-          "opensmn_password": "OpenSMN password"
+          "opensmn_password": "OpenSMN password (leave empty if OpenSMN has none)"
         }
       }
     },

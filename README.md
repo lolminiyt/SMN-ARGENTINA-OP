@@ -56,6 +56,12 @@ Ajustes → Dispositivos y servicios → Agregar integración → **SMN Argentin
 
 La configuración valida resolviendo el `location_id` con `GET {base}/v1/georef/location/coord?lat=..&lon=..`. No deja duplicados (misma estación o coordenadas a menos de ~11 m). En Opciones podés cambiar el intervalo de actualización (600–7200 s, por defecto 1800 s) y rotar las credenciales del proxy.
 
+### ¿Qué pongo en cada campo?
+
+- **Tipo de conexión:** si levantaste OpenSMN en tu red, `Proxy OpenSMN`. Si no tenés ningún servidor, `SMN directo` (no pide URL ni contraseña, anda de una).
+- **URL base de OpenSMN:** la dirección de tu proxy, ej. `http://192.168.1.10:6942/smn`. Ojo: `localhost` solo sirve si OpenSMN corre en la misma máquina que Home Assistant (con HAOS o Docker, `localhost` es el propio HA, así que usá la IP de tu red).
+- **Contraseña de OpenSMN:** tiene que ser **exactamente igual** al valor de `PASSWORD` en el archivo `.env` de OpenSMN. Si en tu `.env` no pusiste contraseña (vacío), dejá este campo **vacío** también.
+
 > Primero auto-hospedá OpenSMN: `git clone https://github.com/nixietab/OpenSMN`, `pip install -r requirements.txt`, `cp .env.example .env`, `uvicorn server:app --port 6942` (desarrollo) o `./start.sh` (producción).
 
 ## Ejemplos de automatizaciones

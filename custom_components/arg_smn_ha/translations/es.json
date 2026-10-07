@@ -3,11 +3,11 @@
     "step": {
       "user": {
         "title": "Configurar SMN Argentina",
-        "description": "Conectá con tu proxy OpenSMN auto-hospedado (recomendado, privado) o directo al SMN.",
+        "description": "Conectá con tu proxy OpenSMN auto-hospedado (recomendado, privado) o directo al SMN. Si no tenés un servidor OpenSMN, elegí SMN directo: no necesitás URL ni contraseña.",
         "data": {
           "connection_type": "Tipo de conexión",
-          "opensmn_url": "URL base de OpenSMN (modo proxy)",
-          "opensmn_password": "Contraseña de OpenSMN (si está en .env)",
+          "opensmn_url": "URL base de OpenSMN (solo modo proxy)",
+          "opensmn_password": "Contraseña de OpenSMN (igual al PASSWORD del .env de OpenSMN; vacía si no tiene)",
           "latitude": "Latitud",
           "longitude": "Longitud",
           "name": "Nombre de la ubicación"
@@ -15,10 +15,10 @@
       },
       "reauth_confirm": {
         "title": "Reautenticar SMN Argentina",
-        "description": "Actualizá la contraseña de OpenSMN (o refrescá el token directo del SMN).",
+        "description": "Actualizá la contraseña de OpenSMN (igual al PASSWORD del .env de OpenSMN).",
         "data": {
           "opensmn_url": "URL base de OpenSMN",
-          "opensmn_password": "Contraseña de OpenSMN"
+          "opensmn_password": "Contraseña de OpenSMN (vacía si OpenSMN no tiene)"
         }
       }
     },
