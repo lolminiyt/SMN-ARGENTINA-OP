@@ -46,11 +46,17 @@ Copiá `custom_components/arg_smn_ha` en `<config>/custom_components/` y reinici
 
 Ajustes → Dispositivos y servicios → Agregar integración → **SMN Argentina (OpenSMN)**.
 
+**Paso 1:** elegí el tipo de conexión y completá latitud, longitud y nombre.
+- **SMN directo** (por defecto): anda de una, sin servidor. Recomendado para empezar.
+- **Proxy OpenSMN** (avanzado): te pide un **paso 2** con la URL y contraseña de tu proxy.
+
+**Paso 2 (solo proxy):** URL base (ej. `http://192.168.1.10:6942/smn`) y contraseña (**exactamente igual** al `PASSWORD` de tu `.env` de OpenSMN; vacía si no tiene).
+
 | Campo | Modo proxy | Modo directo |
 |---|---|---|
-| Tipo de conexión | `Proxy OpenSMN` | `SMN directo` |
-| URL base de OpenSMN | ej. `http://192.168.1.10:6942/smn` | se ignora |
-| Contraseña de OpenSMN | valor de `PASSWORD` en el `.env` de OpenSMN, vacío si no tiene | se ignora |
+| Tipo de conexión | `Proxy OpenSMN` | `SMN directo` (por defecto) |
+| URL base de OpenSMN | ej. `http://192.168.1.10:6942/smn` | no se pide |
+| Contraseña de OpenSMN | valor de `PASSWORD` en el `.env` de OpenSMN, vacío si no tiene | no se pide |
 | Latitud/Longitud | coordenadas de tu estación | igual |
 | Nombre | nombre de la entidad/dispositivo | igual |
 

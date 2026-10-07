@@ -3,14 +3,20 @@
     "step": {
       "user": {
         "title": "Configure SMN Argentina",
-        "description": "Connect via your self-hosted OpenSMN proxy (recommended, private) or directly to SMN. If you don't run an OpenSMN server, pick Direct SMN: no URL or password needed.",
+        "description": "Pick how to connect. Direct SMN works out of the box with no server. The OpenSMN proxy is for advanced users who self-host it.",
         "data": {
           "connection_type": "Connection type",
-          "opensmn_url": "OpenSMN base URL (proxy mode only)",
-          "opensmn_password": "OpenSMN password (must match PASSWORD in the OpenSMN .env file; leave empty if it has none)",
           "latitude": "Latitude",
           "longitude": "Longitude",
           "name": "Location name"
+        }
+      },
+      "proxy": {
+        "title": "Connect to OpenSMN proxy",
+        "description": "Enter your self-hosted OpenSMN address. Use the LAN IP if Home Assistant runs on another machine (localhost only works when OpenSMN runs on the same host). The password must match PASSWORD in the OpenSMN .env file; leave it empty if OpenSMN has none.",
+        "data": {
+          "opensmn_url": "OpenSMN base URL",
+          "opensmn_password": "OpenSMN password"
         }
       },
       "reauth_confirm": {
@@ -23,7 +29,9 @@
       }
     },
     "error": {
-      "cannot_connect": "Could not reach SMN. Check the URL/network and try again.",
+      "cannot_connect": "Could not reach SMN. Check the network and try again.",
+      "cannot_connect_proxy": "Could not reach the OpenSMN proxy. Is OpenSMN running at that URL? If Home Assistant runs on another machine, use the LAN IP instead of localhost.",
+      "cannot_connect_direct": "Could not reach SMN directly. Check your internet connection and try again.",
       "invalid_auth": "Authentication failed. Check the OpenSMN password and try again.",
       "location_not_found": "No SMN station found for these coordinates. Try a nearby city.",
       "invalid_coordinates": "Invalid latitude/longitude.",

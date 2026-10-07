@@ -398,6 +398,10 @@ class TestServicesAndAutomations(unittest.IsolatedAsyncioTestCase):
 
 
 class TestConfigRules(unittest.TestCase):
+    def test_default_is_direct_zero_setup(self):
+        from custom_components.arg_smn_ha.const import DEFAULT_CONNECTION_TYPE
+        self.assertEqual(DEFAULT_CONNECTION_TYPE, CONNECTION_TYPE_DIRECT)
+
     def test_unique_id_format_and_tolerance(self):
         self.assertEqual(f"{CONNECTION_TYPE_OPENSMN}_4864", "opensmn_4864")
         self.assertEqual(f"{CONNECTION_TYPE_DIRECT}_4864", "direct_4864")

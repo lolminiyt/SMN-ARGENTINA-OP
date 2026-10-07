@@ -3,14 +3,20 @@
     "step": {
       "user": {
         "title": "Configurar SMN Argentina",
-        "description": "Conectá con tu proxy OpenSMN auto-hospedado (recomendado, privado) o directo al SMN. Si no tenés un servidor OpenSMN, elegí SMN directo: no necesitás URL ni contraseña.",
+        "description": "Elegí cómo conectar. SMN directo anda de una, sin servidor. El proxy OpenSMN es para usuarios avanzados que lo auto-hospedan.",
         "data": {
           "connection_type": "Tipo de conexión",
-          "opensmn_url": "URL base de OpenSMN (solo modo proxy)",
-          "opensmn_password": "Contraseña de OpenSMN (igual al PASSWORD del .env de OpenSMN; vacía si no tiene)",
           "latitude": "Latitud",
           "longitude": "Longitud",
           "name": "Nombre de la ubicación"
+        }
+      },
+      "proxy": {
+        "title": "Conectar al proxy OpenSMN",
+        "description": "Ingresá la dirección de tu OpenSMN. Si Home Assistant corre en otra máquina usá la IP de tu red (localhost solo sirve si OpenSMN corre en el mismo equipo). La contraseña debe ser igual al PASSWORD del .env de OpenSMN; vacía si no tiene.",
+        "data": {
+          "opensmn_url": "URL base de OpenSMN",
+          "opensmn_password": "Contraseña de OpenSMN"
         }
       },
       "reauth_confirm": {
@@ -23,7 +29,9 @@
       }
     },
     "error": {
-      "cannot_connect": "No se pudo conectar al SMN. Verificá la URL/red e intentá de nuevo.",
+      "cannot_connect": "No se pudo conectar al SMN. Verificá la red e intentá de nuevo.",
+      "cannot_connect_proxy": "No se pudo conectar al proxy OpenSMN. ¿Está levantado en esa URL? Si Home Assistant corre en otra máquina, usá la IP de tu red en vez de localhost.",
+      "cannot_connect_direct": "No se pudo conectar directo al SMN. Verificá tu conexión a internet e intentá de nuevo.",
       "invalid_auth": "Autenticación fallida. Verificá la contraseña de OpenSMN.",
       "location_not_found": "No hay estación SMN para esas coordenadas. Probá una ciudad cercana.",
       "invalid_coordinates": "Latitud/longitud inválidas.",
