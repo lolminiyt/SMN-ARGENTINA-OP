@@ -1,0 +1,77 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Configure SMN Argentina",
+        "description": "Connect via your self-hosted OpenSMN proxy (recommended, private) or directly to SMN.",
+        "data": {
+          "connection_type": "Connection type",
+          "opensmn_url": "OpenSMN base URL (proxy mode)",
+          "opensmn_password": "OpenSMN password (if set in .env)",
+          "latitude": "Latitude",
+          "longitude": "Longitude",
+          "name": "Location name"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Re-authenticate SMN Argentina",
+        "description": "Update the OpenSMN password (or refresh the direct SMN token).",
+        "data": {
+          "opensmn_url": "OpenSMN base URL",
+          "opensmn_password": "OpenSMN password"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Could not reach SMN. Check the URL/network and try again.",
+      "invalid_auth": "Authentication failed. Check the OpenSMN password and try again.",
+      "location_not_found": "No SMN station found for these coordinates. Try a nearby city.",
+      "invalid_coordinates": "Invalid latitude/longitude.",
+      "invalid_name": "Enter a location name.",
+      "required_in_proxy_mode": "OpenSMN URL is required in proxy mode.",
+      "unknown": "Unexpected error. Check the logs."
+    },
+    "abort": {
+      "already_configured": "This location is already configured.",
+      "reauth_successful": "Re-authentication successful."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "SMN Argentina options",
+        "description": "Polling interval and proxy credentials.",
+        "data": {
+          "scan_interval": "Update interval (seconds)",
+          "opensmn_url": "OpenSMN base URL",
+          "opensmn_password": "OpenSMN password"
+        }
+      }
+    },
+    "error": {
+      "invalid_interval": "Interval must be between 600 and 7200 seconds."
+    }
+  },
+  "entity": {
+    "weather": {
+      "smn_weather": {
+        "name": "SMN weather"
+      }
+    },
+    "binary_sensor": {
+      "weather_alert": { "name": "Weather alert" },
+      "alert_lluvia": { "name": "Rain alert" },
+      "alert_viento": { "name": "Wind alert" },
+      "alert_niebla": { "name": "Fog alert" },
+      "alert_tormenta": { "name": "Thunderstorm alert" },
+      "alert_nevada": { "name": "Snow alert" },
+      "alert_altas_temperaturas": { "name": "High temperature alert" },
+      "alert_bajas_temperaturas": { "name": "Low temperature alert" },
+      "alert_ceniza_volcanica": { "name": "Volcanic ash alert" },
+      "alert_polvo": { "name": "Dust alert" },
+      "alert_viento_zonda": { "name": "Zonda wind alert" },
+      "alert_humo": { "name": "Smoke alert" },
+      "short_term_alert": { "name": "Short-term alert" }
+    }
+  }
+}

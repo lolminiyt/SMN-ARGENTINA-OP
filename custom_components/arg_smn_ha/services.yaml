@@ -1,0 +1,23 @@
+# Servicios de SMN Argentina (OpenSMN)
+get_alerts:
+  name: Obtener alertas meteorológicas
+  description: Obtiene las alertas y avisos vigentes del SMN para la ubicación configurada. Devuelve las alertas activas con niveles de severidad, descripciones e instrucciones.
+  fields:
+    config_entry_id:
+      name: ID de entrada de configuración
+      description: Opcional. ID de la entrada de configuración. Dejalo vacío para usar la primera entrada configurada.
+      required: false
+      example: "01JABCDEF1234567890ABCDEF12"
+      selector:
+        text:
+get_alerts_for_location:
+  name: Obtener alertas de una ubicación
+  description: Obtiene las alertas del SMN para cualquier ID de ubicación usando la conexión configurada.
+  fields:
+    location_id:
+      name: ID de ubicación
+      description: ID de ubicación del SMN (por ejemplo, 4864 para CABA).
+      required: true
+      example: "4864"
+      selector:
+        text:

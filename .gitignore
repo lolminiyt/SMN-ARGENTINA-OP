@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Home Assistant
+*.log
+.storage/
+
+# OpenSMN local artifacts (do not commit live proxy data)
+cache/
+token
+.env
+debug_page_source.html
+
+# Investigation clones (not part of the release)
+__upstream_OpenSMN/
+__example_ha-ar-smn/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

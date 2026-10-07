@@ -1,0 +1,50 @@
+{
+  "entity": {
+    "weather": {
+      "smn_weather": {
+        "default": "mdi:weather-partly-cloudy"
+      }
+    },
+    "binary_sensor": {
+      "weather_alert": {
+        "default": "mdi:alert"
+      },
+      "short_term_alert": {
+        "default": "mdi:alert-circle"
+      },
+      "alert_tormenta": {
+        "default": "mdi:weather-lightning"
+      },
+      "alert_lluvia": {
+        "default": "mdi:weather-rainy"
+      },
+      "alert_nevada": {
+        "default": "mdi:weather-snowy"
+      },
+      "alert_viento": {
+        "default": "mdi:weather-windy"
+      },
+      "alert_viento_zonda": {
+        "default": "mdi:weather-windy-variant"
+      },
+      "alert_altas_temperaturas": {
+        "default": "mdi:thermometer-high"
+      },
+      "alert_bajas_temperaturas": {
+        "default": "mdi:thermometer-low"
+      },
+      "alert_niebla": {
+        "default": "mdi:weather-fog"
+      },
+      "alert_polvo": {
+        "default": "mdi:weather-dust"
+      },
+      "alert_humo": {
+        "default": "mdi:smoke"
+      },
+      "alert_ceniza_volcanica": {
+        "default": "mdi:volcano"
+      }
+    }
+  }
+}

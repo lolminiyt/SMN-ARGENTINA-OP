@@ -1,0 +1,12 @@
+{
+  "domain": "arg_smn_ha",
+  "name": "SMN Argentina (OpenSMN)",
+  "codeowners": ["@lolminiyt"],
+  "config_flow": true,
+  "documentation": "https://github.com/lolminiyt/SMN-ARGENTINA-OP",
+  "integration_type": "service",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/lolminiyt/SMN-ARGENTINA-OP/issues",
+  "requirements": [],
+  "version": "1.0.0"
+}

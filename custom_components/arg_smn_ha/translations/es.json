@@ -1,0 +1,77 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Configurar SMN Argentina",
+        "description": "Conectá con tu proxy OpenSMN auto-hospedado (recomendado, privado) o directo al SMN.",
+        "data": {
+          "connection_type": "Tipo de conexión",
+          "opensmn_url": "URL base de OpenSMN (modo proxy)",
+          "opensmn_password": "Contraseña de OpenSMN (si está en .env)",
+          "latitude": "Latitud",
+          "longitude": "Longitud",
+          "name": "Nombre de la ubicación"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Reautenticar SMN Argentina",
+        "description": "Actualizá la contraseña de OpenSMN (o refrescá el token directo del SMN).",
+        "data": {
+          "opensmn_url": "URL base de OpenSMN",
+          "opensmn_password": "Contraseña de OpenSMN"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "No se pudo conectar al SMN. Verificá la URL/red e intentá de nuevo.",
+      "invalid_auth": "Autenticación fallida. Verificá la contraseña de OpenSMN.",
+      "location_not_found": "No hay estación SMN para esas coordenadas. Probá una ciudad cercana.",
+      "invalid_coordinates": "Latitud/longitud inválidas.",
+      "invalid_name": "Ingresá un nombre de ubicación.",
+      "required_in_proxy_mode": "La URL de OpenSMN es obligatoria en modo proxy.",
+      "unknown": "Error inesperado. Revisá los registros."
+    },
+    "abort": {
+      "already_configured": "Esta ubicación ya está configurada.",
+      "reauth_successful": "Reautenticación exitosa."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opciones de SMN Argentina",
+        "description": "Intervalo de actualización y credenciales del proxy.",
+        "data": {
+          "scan_interval": "Intervalo de actualización (segundos)",
+          "opensmn_url": "URL base de OpenSMN",
+          "opensmn_password": "Contraseña de OpenSMN"
+        }
+      }
+    },
+    "error": {
+      "invalid_interval": "El intervalo debe estar entre 600 y 7200 segundos."
+    }
+  },
+  "entity": {
+    "weather": {
+      "smn_weather": {
+        "name": "Clima SMN"
+      }
+    },
+    "binary_sensor": {
+      "weather_alert": { "name": "Alerta meteorológica" },
+      "alert_lluvia": { "name": "Alerta por lluvia" },
+      "alert_viento": { "name": "Alerta por viento" },
+      "alert_niebla": { "name": "Alerta por niebla" },
+      "alert_tormenta": { "name": "Alerta por tormenta" },
+      "alert_nevada": { "name": "Alerta por nevada" },
+      "alert_altas_temperaturas": { "name": "Alerta por altas temperaturas" },
+      "alert_bajas_temperaturas": { "name": "Alerta por bajas temperaturas" },
+      "alert_ceniza_volcanica": { "name": "Alerta por ceniza volcánica" },
+      "alert_polvo": { "name": "Alerta por polvo" },
+      "alert_viento_zonda": { "name": "Alerta por viento zonda" },
+      "alert_humo": { "name": "Alerta por humo" },
+      "short_term_alert": { "name": "Alerta a corto plazo" }
+    }
+  }
+}

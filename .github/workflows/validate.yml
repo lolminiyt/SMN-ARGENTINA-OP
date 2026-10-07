@@ -1,0 +1,44 @@
+name: Validate
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile check
+        run: python -m compileall custom_components/arg_smn_ha tests
+      - name: JSON check
+        run: |
+          python -c "import json,glob; [json.load(open(f, encoding='utf-8')) for f in glob.glob('custom_components/arg_smn_ha/**/*.json', recursive=True)]; print('json ok')"
+          python -c "import json; json.load(open('hacs.json')); json.load(open('custom_components/arg_smn_ha/manifest.json')); print('manifest+hacs ok')"
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run unit tests (stdlib only, no HA runtime needed)
+        run: python -m unittest discover -s tests -v
+  hassfest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Home Assistant hassfest
+        uses: home-assistant/actions/hassfest@master
+  hacs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: HACS validation
+        uses: hacs/action@main
+        with:
+          category: integration

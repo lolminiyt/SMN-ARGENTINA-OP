@@ -1,0 +1,8 @@
+{
+  "name": "SMN Argentina (OpenSMN)",
+  "country": "AR",
+  "content_in_root": false,
+  "filename": "arg_smn_ha",
+  "render_readme": true,
+  "homeassistant": "2024.1.0"
+}
