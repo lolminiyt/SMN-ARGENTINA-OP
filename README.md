@@ -1,7 +1,7 @@
 # SMN Argentina (OpenSMN) para Home Assistant
 
 [![HACS](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration)
-![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)
 
 Integración de Home Assistant para el **Servicio Meteorológico Nacional (SMN)** de Argentina, con **doble conexión**:
 
