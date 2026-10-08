@@ -21,7 +21,7 @@
       },
       "direct": {
         "title": "Conectar directo al SMN",
-        "description": "Dejá el token vacío para obtenerlo automáticamente. Si falla (el SMN a veces lo bloquea), pegá tu token: abrí https://www.smn.gob.ar/ en tu navegador, apretá F12, andá a Aplicación > Almacenamiento local > https://www.smn.gob.ar y copiá el valor de 'token'.",
+        "description": "Dejá el token vacío para obtenerlo automáticamente. Si falla (el SMN a veces lo bloquea), pegá tu token: abrí {smn_site} en tu navegador, apretá F12, andá a Aplicación > Almacenamiento local y copiá el valor de 'token'.",
         "data": {
           "smn_token": "Token del SMN (opcional)"
         }

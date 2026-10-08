@@ -223,6 +223,7 @@ class SmnConfigFlow(ConfigFlow, domain=DOMAIN):
                 {vol.Optional(CONF_SMN_TOKEN, default=(user_input.get(CONF_SMN_TOKEN, "") if user_input else "")): cv.string}
             ),
             errors=errors,
+            description_placeholders={"smn_site": "https://www.smn.gob.ar/"},
         )
 
     async def async_step_reauth(self, entry_data: dict[str, Any]) -> ConfigFlowResult:

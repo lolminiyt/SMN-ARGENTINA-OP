@@ -21,7 +21,7 @@
       },
       "direct": {
         "title": "Connect directly to SMN",
-        "description": "Leave the token empty to fetch it automatically. If automatic fetch fails (SMN sometimes blocks it), paste your token: open https://www.smn.gob.ar/ in your browser, press F12, go to Application > Local Storage > https://www.smn.gob.ar and copy the value of 'token'.",
+        "description": "Leave the token empty to fetch it automatically. If automatic fetch fails (SMN sometimes blocks it), paste your token: open {smn_site} in your browser, press F12, go to Application > Local Storage and copy the value of 'token'.",
         "data": {
           "smn_token": "SMN token (optional)"
         }
