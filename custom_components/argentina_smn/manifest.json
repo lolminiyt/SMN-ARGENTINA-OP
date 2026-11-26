@@ -1,0 +1,12 @@
+{
+  "domain": "argentina_smn",
+  "name": "SMN - Servicio Meteorológico Nacional",
+  "codeowners": ["lolminiyt"],
+  "config_flow": true,
+  "documentation": "https://github.com/lolminiyt/SMN-ARGENTINA-OP",
+  "integration_type": "service",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/lolminiyt/SMN-ARGENTINA-OP/issues",
+  "requirements": ["curl_cffi>=0.8.0"],
+  "version": "2.1.0"
+}

@@ -1,0 +1,6 @@
+{
+  "name": "SMN - Servicio Meteorológico Nacional",
+  "homeassistant": "2024.6.0",
+  "country": "AR",
+  "render_readme": true
+}

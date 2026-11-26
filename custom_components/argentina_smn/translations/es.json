@@ -1,0 +1,126 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "SMN Clima",
+        "description": "Configurá una estación meteorológica del SMN para tus coordenadas. El usuario y la contraseña solo son necesarios si tenés una cuenta de la API del SMN; de lo contrario se usa el token público del sitio web.",
+        "data": {
+          "latitude": "Latitud",
+          "longitude": "Longitud",
+          "name": "Nombre",
+          "username": "Usuario (opcional)",
+          "password": "Contraseña (opcional)"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Reautenticar SMN",
+        "description": "El SMN rechazó las credenciales guardadas. Ingresá credenciales válidas de la API del SMN para continuar.",
+        "data": {
+          "username": "Usuario",
+          "password": "Contraseña"
+        }
+      }
+    },
+    "error": {
+      "invalid_latitude": "La latitud debe estar entre -90 y 90.",
+      "invalid_longitude": "La longitud debe estar entre -180 y 180.",
+      "outside_argentina": "Estas coordenadas están fuera del área cubierta por el SMN (Argentina).",
+      "credentials_required": "Ingresá usuario y contraseña, o dejá ambos campos vacíos.",
+      "invalid_auth": "El SMN rechazó estas credenciales.",
+      "cannot_connect": "No se pudo conectar con el SMN. Revisá tu conexión e intentá de nuevo.",
+      "unknown": "Error inesperado. Revisá el registro de Home Assistant para más detalles."
+    },
+    "abort": {
+      "already_configured": "Esta ubicación ya está configurada.",
+      "reauth_successful": "La reautenticación fue exitosa.",
+      "reauth_failed": "La reautenticación falló. Iniciá el flujo nuevamente."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opciones del SMN",
+        "description": "Elegí cada cuánto Home Assistant consulta al SMN. El valor predeterminado es 60 minutos.",
+        "data": {
+          "scan_interval": "Intervalo de actualización (minutos)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "weather_alert": {
+        "name": "Alerta meteorológica"
+      },
+      "alert_lluvia": {
+        "name": "Alerta por lluvia"
+      },
+      "alert_viento": {
+        "name": "Alerta por viento"
+      },
+      "alert_niebla": {
+        "name": "Alerta por niebla"
+      },
+      "alert_tormenta": {
+        "name": "Alerta por tormenta"
+      },
+      "alert_nevada": {
+        "name": "Alerta por nevada"
+      },
+      "alert_altas_temperaturas": {
+        "name": "Alerta por altas temperaturas"
+      },
+      "alert_bajas_temperaturas": {
+        "name": "Alerta por bajas temperaturas"
+      },
+      "alert_ceniza_volcanica": {
+        "name": "Alerta por ceniza volcánica"
+      },
+      "alert_polvo": {
+        "name": "Alerta por polvo"
+      },
+      "alert_viento_zonda": {
+        "name": "Alerta por viento Zonda"
+      },
+      "alert_humo": {
+        "name": "Alerta por humo"
+      },
+      "short_term_alert": {
+        "name": "Alerta de corto plazo"
+      }
+    }
+  },
+  "exceptions": {
+    "no_entry": {
+      "message": "No se encontró una entrada del SMN cargada."
+    },
+    "alerts_fetch_failed": {
+      "message": "No se pudieron obtener las alertas del SMN: {error}"
+    },
+    "alerts_unavailable": {
+      "message": "Las alertas del SMN no están disponibles temporalmente. Revisá el registro de Home Assistant para más detalles."
+    }
+  },
+  "services": {
+    "get_alerts": {
+      "name": "Obtener alertas meteorológicas",
+      "description": "Devuelve las alertas actuales del SMN para una ubicación configurada.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Entrada de configuración",
+          "description": "Entrada del SMN opcional. Dejala vacía para usar la primera entrada cargada."
+        }
+      }
+    },
+    "get_alerts_for_location": {
+      "name": "Obtener alertas para una ubicación",
+      "description": "Obtiene alertas del SMN para cualquier ID de ubicación del SMN.",
+      "fields": {
+        "location_id": {
+          "name": "ID de ubicación",
+          "description": "El ID numérico de ubicación del SMN, por ejemplo 4864 para Buenos Aires."
+        }
+      }
+    }
+  }
+}

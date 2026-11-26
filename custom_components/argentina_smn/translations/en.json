@@ -1,0 +1,126 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "SMN Weather",
+        "description": "Configure an SMN weather station for your coordinates. Username and password are only needed if you have an SMN API account; otherwise the public web token is used.",
+        "data": {
+          "latitude": "Latitude",
+          "longitude": "Longitude",
+          "name": "Name",
+          "username": "Username (optional)",
+          "password": "Password (optional)"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Reauthenticate SMN",
+        "description": "SMN rejected the stored credentials. Enter valid SMN API credentials to continue.",
+        "data": {
+          "username": "Username",
+          "password": "Password"
+        }
+      }
+    },
+    "error": {
+      "invalid_latitude": "Latitude must be between -90 and 90.",
+      "invalid_longitude": "Longitude must be between -180 and 180.",
+      "outside_argentina": "These coordinates are outside the area covered by SMN (Argentina).",
+      "credentials_required": "Enter both a username and a password, or leave both empty.",
+      "invalid_auth": "SMN rejected these credentials.",
+      "cannot_connect": "Could not connect to SMN. Check your connection and try again.",
+      "unknown": "Unexpected error. Check the Home Assistant log for details."
+    },
+    "abort": {
+      "already_configured": "This location is already configured.",
+      "reauth_successful": "Reauthentication was successful.",
+      "reauth_failed": "Reauthentication failed. Start the flow again."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "SMN options",
+        "description": "Choose how often Home Assistant polls SMN. The default is 60 minutes.",
+        "data": {
+          "scan_interval": "Update interval (minutes)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "weather_alert": {
+        "name": "Weather alert"
+      },
+      "alert_lluvia": {
+        "name": "Rain alert"
+      },
+      "alert_viento": {
+        "name": "Wind alert"
+      },
+      "alert_niebla": {
+        "name": "Fog alert"
+      },
+      "alert_tormenta": {
+        "name": "Thunderstorm alert"
+      },
+      "alert_nevada": {
+        "name": "Snow alert"
+      },
+      "alert_altas_temperaturas": {
+        "name": "High temperature alert"
+      },
+      "alert_bajas_temperaturas": {
+        "name": "Low temperature alert"
+      },
+      "alert_ceniza_volcanica": {
+        "name": "Volcanic ash alert"
+      },
+      "alert_polvo": {
+        "name": "Dust alert"
+      },
+      "alert_viento_zonda": {
+        "name": "Zonda wind alert"
+      },
+      "alert_humo": {
+        "name": "Smoke alert"
+      },
+      "short_term_alert": {
+        "name": "Short-term alert"
+      }
+    }
+  },
+  "exceptions": {
+    "no_entry": {
+      "message": "No loaded SMN integration entry was found."
+    },
+    "alerts_fetch_failed": {
+      "message": "Could not fetch SMN alerts: {error}"
+    },
+    "alerts_unavailable": {
+      "message": "SMN alerts are temporarily unavailable. Check the Home Assistant log for details."
+    }
+  },
+  "services": {
+    "get_alerts": {
+      "name": "Get weather alerts",
+      "description": "Return the current SMN alerts for a configured location.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Config entry",
+          "description": "Optional SMN config entry. Leave empty to use the first loaded entry."
+        }
+      }
+    },
+    "get_alerts_for_location": {
+      "name": "Get alerts for a location",
+      "description": "Fetch SMN alerts for any SMN location ID.",
+      "fields": {
+        "location_id": {
+          "name": "Location ID",
+          "description": "The numeric SMN location ID, for example 4864 for Buenos Aires."
+        }
+      }
+    }
+  }
+}
