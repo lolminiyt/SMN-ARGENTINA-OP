@@ -3,7 +3,24 @@
     "step": {
       "user": {
         "title": "SMN Weather",
-        "description": "Configure an SMN weather station for your coordinates. Username and password are only needed if you have an SMN API account; otherwise the public web token is used.",
+        "description": "Home Assistant home location: {latitude}, {longitude}. Choose how to set the location for this weather integration.",
+        "menu_options": {
+          "home": "Use the Home Assistant home location",
+          "manual": "Enter coordinates manually"
+        }
+      },
+      "home": {
+        "title": "SMN Weather",
+        "description": "Use the home location configured in Home Assistant ({latitude}, {longitude}). Username and password are only needed if you have an SMN API account.",
+        "data": {
+          "name": "Name",
+          "username": "Username (optional)",
+          "password": "Password (optional)"
+        }
+      },
+      "manual": {
+        "title": "SMN Weather",
+        "description": "Enter the coordinates for the location you want to track. Username and password are only needed if you have an SMN API account.",
         "data": {
           "latitude": "Latitude",
           "longitude": "Longitude",

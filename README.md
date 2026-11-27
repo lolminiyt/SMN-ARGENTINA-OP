@@ -110,11 +110,19 @@ manual `pip install` is needed.
 1. Go to **Settings** → **Devices & Services**.
 2. Click **Add Integration**.
 3. Search for **SMN**.
-4. Enter:
-   - **Latitude**: your latitude (pre-filled with the Home Assistant home location)
-   - **Longitude**: your longitude
-   - **Name**: a friendly name for this weather station
-   - **Username / Password** (optional): only if you have SMN API credentials
+4. Choose how to set the location:
+   - **Use the Home Assistant home location** (recommended): copies the home
+     coordinates configured under **Settings** → **System** → **General**.
+     Changing the HA home location later does not move an existing entry.
+   - **Enter coordinates manually**: for a different city or location. The
+     fields are pre-filled with the HA home coordinates.
+5. Optionally set a friendly **Name** and SMN API **Username / Password**.
+   Credentials are only needed if you have an SMN API account; otherwise the
+   public web token is used. Leave both empty if you do not have an account.
+
+If the HA home location is outside Argentina, the integration opens the manual
+coordinates form pre-filled with that location so you can correct it without
+restarting the flow.
 
 The integration resolves the nearest SMN location, fetches current weather,
 forecast and alerts, and creates the weather and binary sensor entities.

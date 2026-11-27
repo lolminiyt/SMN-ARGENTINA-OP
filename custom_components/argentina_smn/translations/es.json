@@ -3,7 +3,24 @@
     "step": {
       "user": {
         "title": "SMN Clima",
-        "description": "Configurá una estación meteorológica del SMN para tus coordenadas. El usuario y la contraseña solo son necesarios si tenés una cuenta de la API del SMN; de lo contrario se usa el token público del sitio web.",
+        "description": "Ubicación de la casa en Home Assistant: {latitude}, {longitude}. Elegí cómo definir la ubicación de esta integración meteorológica.",
+        "menu_options": {
+          "home": "Usar la ubicación de la casa en Home Assistant",
+          "manual": "Ingresar coordenadas manualmente"
+        }
+      },
+      "home": {
+        "title": "SMN Clima",
+        "description": "Usa la ubicación de la casa configurada en Home Assistant ({latitude}, {longitude}). El usuario y la contraseña solo son necesarios si tenés una cuenta de la API del SMN.",
+        "data": {
+          "name": "Nombre",
+          "username": "Usuario (opcional)",
+          "password": "Contraseña (opcional)"
+        }
+      },
+      "manual": {
+        "title": "SMN Clima",
+        "description": "Ingresá las coordenadas de la ubicación que querés seguir. El usuario y la contraseña solo son necesarios si tenés una cuenta de la API del SMN.",
         "data": {
           "latitude": "Latitud",
           "longitude": "Longitud",

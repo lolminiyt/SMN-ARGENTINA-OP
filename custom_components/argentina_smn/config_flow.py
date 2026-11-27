@@ -93,12 +93,49 @@ class ArgentinaSMNConfigFlow(ConfigFlow, domain=DOMAIN):
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
-        """Handle the initial step."""
-        errors: dict[str, str] = {}
+        """Let the user choose between the HA home location and custom coordinates."""
+        return self.async_show_menu(
+            menu_options=["home", "manual"],
+            description_placeholders={
+                "latitude": f"{self.hass.config.latitude:.4f}",
+                "longitude": f"{self.hass.config.longitude:.4f}",
+            },
+        )
 
-        if user_input is not None:
-            latitude = user_input[CONF_LATITUDE]
-            longitude = user_input[CONF_LONGITUDE]
+    async def async_step_home(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Configure the integration for the Home Assistant home location."""
+        return await self._async_configure(step_id="home", user_input=user_input)
+
+    async def async_step_manual(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Configure the integration for custom coordinates."""
+        return await self._async_configure(step_id="manual", user_input=user_input)
+
+    async def _async_configure(
+        self,
+        *,
+        step_id: str,
+        user_input: dict[str, Any] | None,
+    ) -> ConfigFlowResult:
+        """Validate the location and create the config entry."""
+        errors: dict[str, str] = {}
+        latitude = self.hass.config.latitude
+        longitude = self.hass.config.longitude
+
+        # The HA home location is not covered by SMN: send the user to the
+        # manual step with the home coordinates pre-filled instead of showing
+        # a form that can never be submitted.
+        home_unsupported = step_id == "home" and bool(
+            validate_coordinates(latitude, longitude)
+        )
+
+        if user_input is not None and not home_unsupported:
+            if step_id == "manual":
+                latitude = user_input[CONF_LATITUDE]
+                longitude = user_input[CONF_LONGITUDE]
             name = (user_input.get(CONF_NAME) or "").strip()
             username = (user_input.get(CONF_USERNAME) or "").strip() or None
             password = user_input.get(CONF_PASSWORD) or None
@@ -133,24 +170,28 @@ class ArgentinaSMNConfigFlow(ConfigFlow, domain=DOMAIN):
                         data[CONF_PASSWORD] = password
                     return self.async_create_entry(title=data[CONF_NAME], data=data)
 
-        data_schema = vol.Schema(
-            {
-                vol.Required(
-                    CONF_LATITUDE, default=self.hass.config.latitude
-                ): cv.latitude,
-                vol.Required(
-                    CONF_LONGITUDE, default=self.hass.config.longitude
-                ): cv.longitude,
-                vol.Optional(CONF_NAME): cv.string,
-                vol.Optional(CONF_USERNAME): cv.string,
-                vol.Optional(CONF_PASSWORD): cv.string,
-            }
-        )
+        if home_unsupported:
+            errors["base"] = "outside_argentina"
+            step_id = "manual"
+
+        schema_fields: dict[Any, Any] = {}
+        if step_id == "manual":
+            schema_fields[vol.Required(CONF_LATITUDE, default=latitude)] = cv.latitude
+            schema_fields[vol.Required(CONF_LONGITUDE, default=longitude)] = (
+                cv.longitude
+            )
+        schema_fields[vol.Optional(CONF_NAME)] = cv.string
+        schema_fields[vol.Optional(CONF_USERNAME)] = cv.string
+        schema_fields[vol.Optional(CONF_PASSWORD)] = cv.string
 
         return self.async_show_form(
-            step_id="user",
-            data_schema=data_schema,
+            step_id=step_id,
+            data_schema=vol.Schema(schema_fields),
             errors=errors,
+            description_placeholders={
+                "latitude": f"{latitude:.4f}",
+                "longitude": f"{longitude:.4f}",
+            },
         )
 
     async def async_step_reauth(
